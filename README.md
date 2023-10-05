@@ -32,6 +32,10 @@ This project tracker allows you to add and manage project details, including the
 
 ## Screenshots
 
+![Screenshot 1](img1.1.png)
+![Screenshot 2](img2.2.png)
+![Screenshot 3](img3.3.png)
+![Screenshot 4](img4.4.png)
 
 ## Credits
 
