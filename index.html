@@ -1,36 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Your meta tags and other head content -->
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project Tracker</title>
+
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
     />
+
     <script
       src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"
       integrity="sha256-iu/zLUB+QgISXBLCW/mcDi/rnf4m4uEDO0wauy76x7U="
       crossorigin="anonymous"
     ></script>
+
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+    />
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   </head>
+
   <body>
     <div class="bg-dark text-secondary px-4 py-1 text-center">
       <div class="py-3">
         <h1 class="display-6 fw-bold text-white">Project Tracker</h1>
-        <h2 class="fs-5 mb-4 fw-bold text-white">Current Time & Date:</h2>
         <h2 class="fs-5 mb-4 fw-bold text-white" id="currDateTime"></h2>
       </div>
     </div>
     <div class="container">
-      <!-- Your content for Task 1 goes here -->
+      <div class="card mt-4">
+        <div class="card-body">
+          <h5 class="card-title">How to Use</h5>
+          <p class="card-text">
+            Welcome to the Project Tracker app! To add a new project, click the
+            button below and fill in the details in the form.
+          </p>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#projectModal"
+          >
+            Add Project
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="projectModal"
+        tabindex="-1"
+        aria-labelledby="projectModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="projectModalLabel">Add Project</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form id="projForm">
+                <div class="mb-3">
+                  <label for="projName" class="form-label">Project Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="projName"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="projType" class="form-label">Project Type</label>
+                  <select class="form-select" id="projType" required>
+                    <option value="Type 1">Type 1</option>
+                    <option value="Type 2">Type 2</option>
+                    <option value="Type 3">Type 3</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="projDate" class="form-label">Due Date</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="projDate"
+                    required
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <table class="table mt-4">
+        <thead>
+          <tr>
+            <th scope="col">Project Name</th>
+            <th scope="col">Project Type</th>
+            <th scope="col">Due Date</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="projTable">
+          <!-- Project data will be inserted here -->
+        </tbody>
+      </table>
     </div>
 
-    <!-- JavaScript files at the end of the body -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
+    <script>
+      // Timer for updating current date and time
+      var timerInterval = setInterval(function () {
+        var currDateTime = dayjs().format("MMM DD, YYYY [at] hh:mm:ss A");
+        $("#currDateTime").text(currDateTime);
+      }, 1000);
+
+      $("#projDate").datepicker();
+
+      // Function to capture form data and update localStorage
+      function captureFormData(event) {
+        event.preventDefault();
+
+        var projName = $("#projName").val();
+        var projType = $("#projType").val();
+        var projDate = $("#projDate").val();
+
+        // Create a new project object with the form data
+        var project = {
+          name: projName,
+          type: projType,
+          dueDate: projDate,
+        };
+
+        // Insert the project data into the table
+        var newRow = $("<tr>");
+        newRow.append("<td>" + project.name + "</td>");
+        newRow.append("<td>" + project.type + "</td>");
+        newRow.append("<td>" + project.dueDate + "</td>");
+        newRow.append(
+          '<td><button class="btn btn-danger btn-sm">Delete</button></td>'
+        );
+
+        $("#projTable").append(newRow);
+
+        // Clear the form
+        $("#projForm")[0].reset();
+
+        // Close the modal
+        $("#projectModal").modal("hide");
+      }
+
+      $("#projForm").on("submit", captureFormData);
+    </script>
   </body>
 </html>
